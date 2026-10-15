@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RED ALERT - Blooket Edition</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,400;0,700;0,800;0,900;1,900&display=swap');
+
+    :root {
+      --bg: #0f141c;
+      --panel: #19212e;
+      --card-bg: #222c3d;
+      --primary: #e61c37;
+      --primary-dark: #b80d24;
+      --accent: #ffcb05;
+      --accent-dark: #dca300;
+      --blue: #1877f2;
+      --green: #00c853;
+      --text: #ffffff;
+      --text-sub: #8ba2c0;
+      --border: #2d3b52;
+      
+      --rarity-uncommon: #4bc0c0;
+      --rarity-rare: #36a2eb;
+      --rarity-epic: #9966ff;
+      --rarity-legendary: #ff9f40;
+      --rarity-chroma: #00ffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-user-select: none; user-select: none; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; overflow-x: hidden; }
+    
+    /* Navbar Style */
+    header { width: 100%; background: var(--panel); border-bottom: 4px solid var(--border); padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+    .logo { font-size: 26px; font-weight: 900; color: var(--primary); letter-spacing: 1px; text-shadow: 2px 2px 0px #000; cursor: pointer; display: flex; align-items: center; gap: 8px; }
+    .nav-stats { display: flex; gap: 12px; align-items: center; font-weight: 900; }
+    
+    .stat-box { background: var(--card-bg); border: 3px solid var(--border); padding: 6px 14px; border-radius: 12px; font-size: 15px; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 0 #121822; cursor: pointer; transition: 0.1s; }
+    .stat-box:active { transform: translateY(2px); box-shadow: 0 2px 0 #121822; }
+
+    /* Button Style */
+    .btn { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 12px; font-weight: 900; font-size: 15px; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 5px 0 var(--primary-dark); }
+    .btn:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--primary-dark); }
+    .btn-gold { background: var(--accent); color: #222; box-shadow: 0 5px 0 var(--accent-dark); }
+    .btn-gold:active { box-shadow: 0 2px 0 var(--accent-dark); }
+    .btn-blue { background: var(--blue); box-shadow: 0 5px 0 #0d5bc4; }
+    .btn-blue:active { box-shadow: 0 2px 0 #0d5bc4; }
+
+    main { width: 100%; max-width: 1000px; padding: 35px 20px; text-align: center; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-top: 25px; }
+    
+    .card { background: var(--card-bg); border: 3px solid var(--border); border-radius: 20px; padding: 25px 20px; display: flex; flex-direction: column; align-items: center; gap: 15px; transition: transform 0.2s; box-shadow: 0 8px 0 #121822; }
+    .card:hover { transform: translateY(-5px); border-color: var(--blue); }
+
+    .blook-avatar { width: 85px; height: 100px; background: #141b26; border: 3px solid var(--border); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 46px; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+
+    /* Modal Overlay */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+    .modal.active { display: flex; }
+    .modal-body { background: var(--panel); border: 4px solid var(--border); width: 100%; max-width: 580px; border-radius: 24px; padding: 30px; text-align: left; box-shadow: 0 10px 30px rgba(0,0,0,0.7); max-height: 85vh; overflow-y: auto; }
+    .modal-body h2 { color: var(--text); margin-bottom: 18px; font-weight: 900; font-size: 26px; display: flex; justify-content: space-between; align-items: center; }
+    
+    input { width: 100%; padding: 12px; background: var(--card-bg); border: 3px solid var(--border); border-radius: 12px; color: white; margin-bottom: 18px; font-size: 16px; font-weight: 700; }
+    input:focus { border-color: var(--blue); outline: none; }
+
+    .banner { width: 100%; background: var(--primary); color: white; text-align: center; padding: 8px; font-weight: 900; font-size: 14px; letter-spacing: 1px; display: none; }
+
+    /* Pack Grid */
+    .pack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 15px; }
+    .pack-card { background: var(--card-bg); border: 3px solid var(--border); border-radius: 18px; padding: 16px; text-align: center; cursor: pointer; transition: transform 0.15s, border-color 0.15s; box-shadow: 0 6px 0 #121822; }
+    .pack-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+    
+    /* Locker Grid */
+    .locker-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 15px; margin-top: 15px; }
+    .locker-item { background: var(--card-bg); border: 3px solid var(--border); border-radius: 16px; padding: 14px; text-align: center; box-shadow: 0 5px 0 #121822; position: relative; }
+    .locker-item.Uncommon { border-color: var(--rarity-uncommon); }
+    .locker-item.Rare { border-color: var(--rarity-rare); }
+    .locker-item.Epic { border-color: var(--rarity-epic); }
+    .locker-item.Legendary { border-color: var(--rarity-legendary); }
+    .locker-item.Chroma { border-color: var(--rarity-chroma); }
+    .blook-badge { position: absolute; top: -8px; right: -8px; background: var(--primary); color: white; font-size: 11px; font-weight: 900; border-radius: 10px; padding: 2px 7px; border: 2px solid var(--bg); }
+
+    /* Bazaar Grid */
+    .bazaar-grid { display: grid; grid-template-columns: 1fr; gap: 12px; margin-top: 15px; }
+    .bazaar-item { background: var(--card-bg); border: 3px solid var(--border); border-radius: 14px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 0 #121822; }
+
+    /* Reveal Box */
+    .reveal-box { text-align: center; padding: 20px; }
+    .reveal-avatar { font-size: 80px; animation: blookBounce 0.6s ease infinite alternate; margin: 15px 0; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); }
+    @keyframes blookBounce { from { transform: translateY(0) scale(1); } to { transform: translateY(-15px) scale(1.05); } }
+
+    /* Trivia Vault */
+    .trivia-box { background: var(--card-bg); border: 3px solid var(--border); border-radius: 18px; padding: 20px; margin-top: 15px; }
+    .trivia-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 15px; }
+    .trivia-btn { background: var(--panel); border: 3px solid var(--border); color: white; padding: 14px; border-radius: 14px; cursor: pointer; font-weight: 800; font-size: 15px; text-align: left; box-shadow: 0 4px 0 #121822; }
+    .trivia-btn:hover { border-color: var(--blue); background: #1f2b3d; }
+
+    .close-x { background: none; border: none; color: var(--text-sub); font-size: 28px; cursor: pointer; font-weight: 900; line-height: 1; }
+    .close-x:hover { color: white; }
+  </style>
+</head>
+<body>
+
+  <div id="broadcastBanner" class="banner">👑 OWNER CONTROLS ACTIVE — UNLIMITED ACCESS GRANTED</div>
+
+  <header>
+    <div class="logo" onclick="goHome()">🚨 RED ALERT</div>
+    <div class="nav-stats">
+      <!-- DOUBLE CLICK/TAP THIS STATS BOX TO OPEN OWNER ADMIN PROMPT -->
+      <div class="stat-box" ondblclick="openAdmin()" title="Double-tap for Owner Code">
+        <span style="font-size:16px;">🪙</span> <span id="tokenCount" style="color:var(--accent);">1,500</span>
+      </div>
+      <button class="btn btn-blue" onclick="openBazaar()">🏪 Bazaar</button>
+    </div>
+  </header>
+
+  <main id="mainContainer">
+    <h1 style="font-size:34px; font-weight:900; margin-bottom:8px;">Red Alert Arcade</h1>
+    <p style="color:var(--text-sub); font-size:15px; font-weight:700;">Answer trivia in Vault Quest, collect rare Blooks, and trade in the Bazaar!</p>
+
+    <div class="grid">
+      <div class="card">
+        <div class="blook-avatar">📦</div>
+        <h3 style="font-weight:900; font-size:20px;">Blook Market</h3>
+        <p style="font-size:13px; color:var(--text-sub); font-weight:700;">Open Horror, Boom, Space, and Dino Packs!</p>
+        <button class="btn btn-blue" style="width:100%; margin-top:auto;" onclick="openMarket()">Enter Market</button>
+      </div>
+
+      <div class="card">
+        <div class="blook-avatar">🔒</div>
+        <h3 style="font-weight:900; font-size:20px;">Blook Locker</h3>
+        <p style="font-size:13px; color:var(--text-sub); font-weight:700;">View & inspect all your unlocked Blooks.</p>
+        <button class="btn btn-blue" style="width:100%; margin-top:auto;" onclick="openLocker()">View Locker</button>
+      </div>
+
+      <div class="card">
+        <div class="blook-avatar">⚡</div>
+        <h3 style="font-weight:900; font-size:20px;">Vault Quest</h3>
+        <p style="font-size:13px; color:var(--text-sub); font-weight:700;">Answer trivia to raid vaults for gold & rewards!</p>
+        <button class="btn" style="width:100%; margin-top:auto;" onclick="startVaultQuest()">Play Mode</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Dynamic Modal -->
+  <div id="gameModal" class="modal">
+    <div class="modal-body" id="modalContentWrapper"></div>
+  </div>
+
+  <script>
+    let state = {
+      tokens: 1500,
+      blooks: [
+        { name: 'Red Devil', pack: 'Horror', rarity: 'Legendary', icon: '😈', count: 1 },
+        { name: 'Slenderman', pack: 'Horror', rarity: 'Epic', icon: '🕴️', count: 2 },
+        { name: 'Atomic Bomb', pack: 'Boom', rarity: 'Chroma', icon: '💣', count: 1 }
+      ],
+      bazaarListings: [
+        { seller: 'GhostX', item: 'Vampire', icon: '🧛', rarity: 'Rare', price: 45 },
+        { seller: 'PixelPro', item: 'Alien', icon: '👽', rarity: 'Rare', price: 50 },
+        { seller: 'CyberQueen', item: 'T-Rex', icon: '🦖', rarity: 'Legendary', iconColor: 'orange', price: 300 }
+      ]
+    };
+
+    const packsData = {
+      'Horror Pack': { cost: 25, items: [
+        { name: 'Zombie', rarity: 'Uncommon', icon: '🧟', rate: 75 },
+        { name: 'Vampire', rarity: 'Rare', icon: '🧛', rate: 19 },
+        { name: 'Slenderman', rarity: 'Epic', icon: '🕴️', rate: 5 },
+        { name: 'Red Devil', rarity: 'Legendary', icon: '😈', rate: 0.95 },
+        { name: 'Ghost King', rarity: 'Chroma', icon: '👻', rate: 0.05 }
+      ]},
+      'Boom Pack': { cost: 25, items: [
+        { name: 'Firecracker', rarity: 'Uncommon', icon: '🧨', rate: 76 },
+        { name: 'Dynamite', rarity: 'Rare', icon: '🧨', rate: 18 },
+        { name: 'C4 Charge', rarity: 'Epic', icon: '🧱', rate: 5.5 },
+        { name: 'Atomic Bomb', rarity: 'Chroma', icon: '💣', rate: 0.5 }
+      ]},
+      'Space Pack': { cost: 20, items: [
+        { name: 'Meteor', rarity: 'Uncommon', icon: '☄️', rate: 75 },
+        { name: 'Alien', rarity: 'Rare', icon: '👽', rate: 20 },
+        { name: 'Spaceship', rarity: 'Epic', icon: '🛸', rate: 4.5 },
+        { name: 'Astronaut', rarity: 'Legendary', icon: '👨‍🚀', rate: 0.5 }
+      ]},
+      'Dino Pack': { cost: 25, items: [
+        { name: 'Dino Egg', rarity: 'Uncommon', icon: '🥚', rate: 78 },
+        { name: 'Stegosaurus', rarity: 'Rare', icon: '🦕', rate: 18 },
+        { name: 'Triceratops', rarity: 'Epic', icon: '🦖', rate: 3.7 },
+        { name: 'T-Rex', rarity: 'Legendary', icon: '🦖', rate: 0.3 }
+      ]}
+    };
+
+    const triviaQuestions = [
+      { q: "What is the powerhouse of the cell?", options: ["Nucleus", "Mitochondria", "Ribosome", "Cell Membrane"], answer: 1 },
+      { q: "Which programming language runs web browsers natively?", options: ["Python", "C++", "JavaScript", "Java"], answer: 2 },
+      { q: "What is the rarest rank achievable in standard packs?", options: ["Legendary", "Chroma", "Mystical", "Unique"], answer: 1 },
+      { q: "In what year was the first computer virus released?", options: ["1971", "1985", "1995", "2001"], answer: 0 },
+      { q: "What chemical element has the symbol 'Fe'?", options: ["Gold", "Iron", "Silver", "Lead"], answer: 1 }
+    ];
+
+    function updateUI() {
+      document.getElementById('tokenCount').innerText = state.tokens.toLocaleString();
+    }
+
+    function closeModal() {
+      document.getElementById('gameModal').classList.remove('active');
+    }
+
+    // --- SECRET ADMIN PANEL TRIGGERED BY DOUBLE-CLICKING STATS ---
+    function openAdmin() {
+      const modal = document.getElementById('gameModal');
+      const wrapper = document.getElementById('modalContentWrapper');
+      wrapper.innerHTML = `
+        <h2>👑 Owner Control Panel <button class="close-x" onclick="closeModal()">×</button></h2>
+        <div id="authSection">
+          <p style="margin-bottom:12px; font-weight:700; color:var(--text-sub);">Enter Owner Code:</p>
+          <input type="password" id="adminPassInput" placeholder="Enter Owner Code">
+          <button class="btn btn-gold" style="width:100%;" onclick="verifyAdmin()">Login as Owner</button>
+        </div>
+        <div id="controlsSection" style="display:none;">
+          <p style="color:var(--green); font-weight:900; margin-bottom:15px; font-size:18px;">✓ Authenticated as GAME OWNER</p>
+          <button class="btn btn-gold" style="width:100%; margin-bottom:12px;" onclick="addTokens(10000)">+ 10,000 Free Tokens</button>
+          <button class="btn btn-blue" style="width:100%; margin-bottom:12px;" onclick="unlockAllBlooks()">Unlock Every Blook in Game</button>
+          <button class="btn" style="width:100%; margin-bottom:10px; background:#444; box-shadow:0 4px 0 #222;" onclick="closeModal()">Close Panel</button>
+        </div>
+      `;
+      modal.classList.add('active');
+    }
+
+    function verifyAdmin() {
+      const pass = document.getElementById('adminPassInput').value;
+      if (pass === 'Ogangel') {
+        document.getElementById('authSection').style.display = 'none';
+        document.getElementById('controlsSection').style.display = 'block';
+        document.getElementById('broadcastBanner').style.display = 'block';
+      } else {
+        alert('Incorrect Owner Code!');
+      }
+    }
+
+    function addTokens(amt) {
+      state.tokens += amt;
+      updateUI();
+      alert(`Added ${amt} Tokens!`);
+    }
+
+    function unlockAllBlooks() {
+      Object.keys(packsData).forEach(packName => {
+        packsData[packName].items.forEach(item => {
+          let existing = state.blooks.find(b => b.name === item.name);
+          if (!existing) {
+            state.blooks.push({ name: item.name, pack: packName, rarity: item.rarity, icon: item.icon, count: 1 });
+          }
+        });
+      });
+      alert('Unlocked ALL Blooks across all Market Packs!');
+    }
+
+    // --- MARKET ---
+    function openMarket() {
+      const modal = document.getElementById('gameModal');
+      const wrapper = document.getElementById('modalContentWrapper');
+      
+      let packsHTML = '';
+      for (let [pName, data] of Object.entries(packsData)) {
+        packsHTML += `
+          <div class="pack-card" onclick="buyPack('${pName}')">
+            <div style="font-size:38px; margin-bottom:6px;">📦</div>
+            <h4 style="color:white; font-weight:900; font-size:16px; margin-bottom:4px;">${pName}</h4>
+            <p style="color:var(--accent); font-size:14px; font-weight:900;">🪙 ${data.cost}</p>
+          </div>
+        `;
+      }
+
+      wrapper.innerHTML = `
+        <h2>🛍️ Blook Market <button class="close-x" onclick="closeModal()">×</button></h2>
+        <p style="color:var(--text-sub); font-size:14px; font-weight:700;">Select a pack to open!</p>
+        <div class="pack-grid">${packsHTML}</div>
+      `;
+      modal.classList.add('active');
+    }
+
+    function buyPack(packName) {
+      const pack = packsData[packName];
+      if (state.tokens < pack.cost) {
+        alert("Not enough tokens!");
+        return;
+      }
+      state.tokens -= pack.cost;
+      updateUI();
+
+      let rand = Math.random() * 100;
+      let cumulative = 0;
+      let droppedItem = pack.items[0];
+
+      for (let item of pack.items) {
+        cumulative += item.rate;
+        if (rand <= cumulative) {
+          droppedItem = item;
+          break;
+        }
+      }
+
+      let existing = state.blooks.find(b => b.name === droppedItem.name);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        state.blooks.push({ name: droppedItem.name, pack: packName, rarity: droppedItem.rarity, icon: droppedItem.icon, count: 1 });
+      }
+
+      const wrapper = document.getElementById('modalContentWrapper');
+      wrapper.innerHTML = `
+        <h2>🎉 Unlocked!</h2>
+        <div class="reveal-box">
+          <p style="color:var(--text-sub); font-weight:700;">You pulled a new Blook from ${packName}!</p>
+          <div class="reveal-avatar">${droppedItem.icon}</div>
+          <h3 style="color:var(--rarity-${droppedItem.rarity.toLowerCase()}); font-size:26px; font-weight:900;">${droppedItem.name}</h3>
+          <p style="margin:8px 0; font-weight:900; color:var(--text-sub);">Rarity: ${droppedItem.rarity}</p>
+          <button class="btn btn-gold" style="margin-top:15px;" onclick="openMarket()">Open Another</button>
+        </div>
+      `;
+    }
+
+    // --- LOCKER ---
+    function openLocker() {
+      const modal = document.getElementById('gameModal');
+      const wrapper = document.getElementById('modalContentWrapper');
+
+      let lockerHTML = '';
+      state.blooks.forEach(b => {
+        lockerHTML += `
+          <div class="locker-item ${b.rarity}">
+            <span class="blook-badge">x${b.count}</span>
+            <div style="font-size:36px;">${b.icon}</div>
+            <div style="font-size:12px; font-weight:900; margin-top:6px; color:white;">${b.name}</div>
+            <div style="font-size:10px; font-weight:800; color:var(--rarity-${b.rarity.toLowerCase()});">${b.rarity}</div>
+          </div>
+        `;
+      });
+
+      wrapper.innerHTML = `
+        <h2>🔒 Blook Locker <button class="close-x" onclick="closeModal()">×</button></h2>
+        <p style="color:var(--text-sub); font-size:14px; font-weight:700;">Your unlocked Blook collection.</p>
+        <div class="locker-grid">${lockerHTML}</div>
+      `;
+      modal.classList.add('active');
+    }
+
+    // --- BAZAAR TRADING ---
+    function openBazaar() {
+      const modal = document.getElementById('gameModal');
+      const wrapper = document.getElementById('modalContentWrapper');
+
+      let listHTML = '';
+      state.bazaarListings.forEach((item, idx) => {
+        listHTML += `
+          <div class="bazaar-item">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:30px;">${item.icon}</span>
+              <div>
+                <div style="font-weight:900; font-size:15px; color:white;">${item.item}</div>
+                <div style="font-size:12px; color:var(--text-sub);">Seller: ${item.seller}</div>
+              </div>
+            </div>
+            <button class="btn btn-gold" style="padding:8px 14px; font-size:13px;" onclick="buyBazaarItem(${idx})">Buy (${item.price} 🪙)</button>
+          </div>
+        `;
+      });
+
+      wrapper.innerHTML = `
+        <h2>🏪 Trading Bazaar <button class="close-x" onclick="closeModal()">×</button></h2>
+        <p style="color:var(--text-sub); font-size:14px; font-weight:700; margin-bottom:12px;">Purchase community blook listings!</p>
+        <div class="bazaar-grid">${listHTML}</div>
+      `;
+      modal.classList.add('active');
+    }
+
+    function buyBazaarItem(idx) {
+      let listing = state.bazaarListings[idx];
+      if (state.tokens < listing.price) {
+        alert("Not enough tokens to buy this listing!");
+        return;
+      }
+      state.tokens -= listing.price;
+      updateUI();
+
+      let existing = state.blooks.find(b => b.name === listing.item);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        state.blooks.push({ name: listing.item, pack: 'Bazaar', rarity: listing.rarity || 'Rare', icon: listing.icon, count: 1 });
+      }
+
+      state.bazaarListings.splice(idx, 1);
+      alert(`Successfully purchased ${listing.item}! Check your Locker.`);
+      openBazaar();
+    }
+
+    // --- VAULT QUEST ---
+    let currentTriviaIndex = 0;
+
+    function startVaultQuest() {
+      currentTriviaIndex = Math.floor(Math.random() * triviaQuestions.length);
+      loadTriviaQuestion();
+    }
+
+    function loadTriviaQuestion() {
+      const modal = document.getElementById('gameModal');
+      const wrapper = document.getElementById('modalContentWrapper');
+      const qData = triviaQuestions[currentTriviaIndex];
+
+      let optionsHTML = '';
+      qData.options.forEach((opt, idx) => {
+        optionsHTML += `<button class="trivia-btn" onclick="submitAnswer(${idx}, ${qData.answer})">${opt}</button>`;
+      });
+
+      wrapper.innerHTML = `
+        <h2>⚡ Vault Quest <button class="close-x" onclick="closeModal()">×</button></h2>
+        <div class="trivia-box">
+          <p style="font-size:13px; color:var(--accent); font-weight:900; margin-bottom:8px;">REWARD: +200 TOKENS</p>
+          <h3 style="font-size:18px; font-weight:900; margin-bottom:15px;">${qData.q}</h3>
+          <div class="trivia-options">${optionsHTML}</div>
+        </div>
+      `;
+      modal.classList.add('active');
+    }
+
+    function submitAnswer(selected, correct) {
+      const wrapper = document.getElementById('modalContentWrapper');
+      if (selected === correct) {
+        state.tokens += 200;
+        updateUI();
+        wrapper.innerHTML = `
+          <h2>✅ Correct!</h2>
+          <div style="text-align:center; padding:20px;">
+            <div style="font-size:50px; margin-bottom:10px;">🪙</div>
+            <h3 style="color:var(--green); font-size:22px; font-weight:900;">Vault Breached! +200 Tokens</h3>
+            <p style="color:var(--text-sub); font-weight:700; margin:10px 0;">Total Tokens: ${state.tokens.toLocaleString()}</p>
+            <button class="btn btn-blue" style="margin-top:10px;" onclick="startVaultQuest()">Next Question</button>
+          </div>
+        `;
+      } else {
+        wrapper.innerHTML = `
+          <h2>❌ Incorrect!</h2>
+          <div style="text-align:center; padding:20px;">
+            <div style="font-size:50px; margin-bottom:10px;">💥</div>
+            <h3 style="color:var(--primary); font-size:22px; font-weight:900;">Security Trap Activated!</h3>
+            <p style="color:var(--text-sub); font-weight:700; margin:10px 0;">No tokens awarded this round.</p>
+            <button class="btn" style="margin-top:10px;" onclick="startVaultQuest()">Try Again</button>
+          </div>
+        `;
+      }
+    }
+
+    function goHome() {
+      closeModal();
+    }
+  </script>
+</body>
+</html>
