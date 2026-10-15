@@ -2,81 +2,84 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Red Alert - Multiplayer Hub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Red Alert - Official Packs Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-base: #140406;
-            --sidebar-bg: #1f070a;
-            --card-bg: #2a0a0f;
+            --bg-base: #0c0204;
+            --nav-bg: #150306;
+            --card-bg: #1f0508;
+            --card-border: #3d0a11;
             --primary-red: #e62e43;
             --primary-hover: #ff3b53;
             --accent-gold: #ffc107;
             --text-main: #ffffff;
-            --text-muted: #d1d5db;
-            --border-color: #4a1219;
+            --text-muted: #cbd5e1;
         }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: var(--bg-base); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+        body { background-color: var(--bg-base); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; padding-bottom: 75px; }
         
-        /* Top Stats Bar */
-        header { background: var(--sidebar-bg); border-bottom: 3px solid var(--primary-red); padding: 14px 25px; display: flex; justify-content: space-between; align-items: center; user-select: none; cursor: pointer; z-index: 100; box-shadow: 0 4px 20px rgba(0,0,0,0.6); }
-        .brand { font-weight: 900; font-size: 1.5rem; color: var(--primary-red); letter-spacing: 1.5px; text-shadow: 0 0 12px rgba(230,46,67,0.5); }
-        .stats-container { display: flex; gap: 25px; font-weight: 800; font-size: 1.05rem; }
+        /* Top Header Bar */
+        header { background: var(--nav-bg); border-bottom: 3px solid var(--primary-red); height: 55px; padding: 0 15px; display: flex; justify-content: space-between; align-items: center; user-select: none; cursor: pointer; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 15px rgba(0,0,0,0.6); }
+        .brand { font-weight: 900; font-size: 1.2rem; color: var(--primary-red); letter-spacing: 1px; text-shadow: 0 0 10px rgba(230,46,67,0.5); }
+        .stats-container { display: flex; gap: 15px; font-weight: 800; font-size: 0.9rem; }
         .stat-item span { color: var(--accent-gold); }
 
-        /* App Layout (Sidebar + Content) */
-        .app-layout { display: flex; flex: 1; height: calc(100vh - 65px); }
-        
-        /* Blooket-style Sidebar */
-        sidebar { width: 260px; background: var(--sidebar-bg); border-right: 2px solid var(--border-color); display: flex; flex-direction: column; padding: 25px 12px; gap: 10px; }
-        .nav-btn { background: transparent; border: none; color: var(--text-muted); padding: 14px 20px; text-align: left; font-size: 1.05rem; font-weight: 800; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 14px; }
-        .nav-btn:hover { background: rgba(230,46,67,0.15); color: var(--text-main); transform: translateX(3px); }
-        .nav-btn.active { background: var(--primary-red); color: white; box-shadow: 0 4px 20px rgba(230,46,67,0.5); }
-
-        /* Content Area */
-        .content-area { flex: 1; padding: 35px; overflow-y: auto; display: flex; flex-direction: column; gap: 25px; }
-        .tab-pane { display: none; flex-direction: column; gap: 25px; animation: fadeIn 0.3s ease; }
+        /* Main Content Container */
+        .content-area { padding: 15px; display: flex; flex-direction: column; gap: 15px; max-width: 500px; margin: 0 auto; width: 100%; }
+        .tab-pane { display: none; flex-direction: column; gap: 15px; animation: fadeIn 0.2s ease; }
         .tab-pane.active { display: flex; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Dashboard & Hero Cards */
-        .hero-box { background: linear-gradient(135deg, #2c080d 0%, #1f070a 100%); border: 2px solid var(--primary-red); border-radius: 18px; padding: 40px; text-align: center; box-shadow: 0 10px 35px rgba(0,0,0,0.6); }
-        .hero-box h1 { font-size: 2.4rem; margin-bottom: 12px; color: var(--text-main); font-weight: 900; }
-        .hero-box p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 25px; }
+        /* Hero Box */
+        .hero-box { background: linear-gradient(135deg, #2c080d 0%, #1a0507 100%); border: 2px solid var(--primary-red); border-radius: 16px; padding: 25px 15px; text-align: center; box-shadow: 0 6px 20px rgba(0,0,0,0.6); }
+        .hero-box h1 { font-size: 1.5rem; margin-bottom: 8px; color: var(--text-main); font-weight: 900; }
+        .hero-box p { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px; font-weight: 600; }
 
-        .btn { background: var(--primary-red); color: white; border: none; padding: 14px 28px; font-weight: 900; border-radius: 12px; cursor: pointer; transition: transform 0.1s, background-color 0.2s; font-size: 1.1rem; box-shadow: 0 4px 15px rgba(230,46,67,0.4); }
-        .btn:hover { background: var(--primary-hover); transform: translateY(-2px); }
-        .btn:active { transform: translateY(0); }
+        .btn { background: var(--primary-red); color: white; border: none; padding: 12px 20px; font-weight: 900; border-radius: 12px; cursor: pointer; transition: transform 0.1s, background-color 0.2s; font-size: 1rem; box-shadow: 0 4px 15px rgba(230,46,67,0.4); text-transform: uppercase; width: 100%; }
+        .btn:active { transform: scale(0.98); }
 
-        /* Spin / Box Opening Arena */
-        .spin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 25px; }
-        .box-card { background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px; padding: 30px; text-align: center; display: flex; flex-direction: column; gap: 15px; transition: border-color 0.2s, transform 0.2s; box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
-        .box-card:hover { border-color: var(--accent-gold); transform: translateY(-4px); }
-        .box-icon { font-size: 4rem; margin-bottom: 5px; }
-        .box-card h3 { color: var(--accent-gold); font-size: 1.4rem; font-weight: 900; }
-        .box-card p { color: var(--text-muted); font-size: 0.95rem; font-weight: 600; }
+        /* Packs Grid */
+        .packs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .box-card { background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 16px; padding: 18px 12px; text-align: center; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.4); justify-content: space-between; }
+        .box-icon { font-size: 2.8rem; }
+        .box-card h3 { color: var(--accent-gold); font-size: 1.05rem; font-weight: 900; }
+        .box-card p { color: var(--text-muted); font-size: 0.8rem; font-weight: 700; }
         
-        #rewardResult { background: var(--card-bg); border: 2px solid var(--accent-gold); border-radius: 16px; padding: 30px; text-align: center; display: none; margin-top: 15px; box-shadow: 0 8px 25px rgba(255,193,7,0.2); animation: popIn 0.3s ease; }
+        #rewardResult { background: var(--card-bg); border: 2px solid var(--accent-gold); border-radius: 16px; padding: 20px; text-align: center; display: none; box-shadow: 0 6px 20px rgba(255,193,7,0.2); animation: popIn 0.3s ease; }
         @keyframes popIn { 0% { transform: scale(0.95); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-        /* Admin Modal */
-        #adminModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: var(--card-bg); border: 2px solid var(--accent-gold); padding: 40px; border-radius: 18px; width: 90%; max-width: 420px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
-        .modal-content h2 { margin-bottom: 15px; color: var(--accent-gold); font-size: 1.6rem; font-weight: 900; }
-        .modal-content input { width: 100%; padding: 14px; margin-bottom: 20px; background: var(--bg-base); border: 2px solid var(--border-color); color: white; border-radius: 10px; font-size: 1.05rem; text-align: center; outline: none; }
-        .modal-content input:focus { border-color: var(--primary-red); }
-        .modal-buttons { display: flex; gap: 12px; justify-content: center; }
-        .btn-secondary { background: #3f1218; box-shadow: none; }
-        .btn-secondary:hover { background: #521820; }
+        /* Card Styling */
+        .blooks-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 10px; }
+        .blook-card { background: #150306; border-radius: 16px; padding: 15px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 8px; border: 3px solid; position: relative; box-shadow: 0 6px 15px rgba(0,0,0,0.6); }
+        .blook-avatar { width: 75px; height: 75px; border-radius: 14px; display: flex; justify-content: center; align-items: center; font-size: 2.3rem; box-shadow: inset 0 -5px 0 rgba(0,0,0,0.4); }
+        .blook-name { font-size: 0.95rem; font-weight: 900; color: white; margin-top: 2px; }
+        .blook-rarity { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; padding: 2px 8px; border-radius: 6px; letter-spacing: 0.5px; }
 
-        /* Mobile Adjustments */
-        @media(max-width: 768px) {
-            .app-layout { flex-direction: column; height: auto; }
-            sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 12px; justify-content: space-around; }
-            .nav-btn { padding: 10px 14px; font-size: 0.95rem; }
-            .content-area { padding: 20px; }
-        }
+        /* Rarity Theme Classes */
+        .rarity-common { border-color: #64748b; } .rarity-common .blook-avatar { background: #475569; } .rarity-common .blook-rarity { background: #475569; color: #f1f5f9; }
+        .rarity-uncommon { border-color: #22c55e; } .rarity-uncommon .blook-avatar { background: #16a34a; } .rarity-uncommon .blook-rarity { background: #16a34a; color: #dcfce7; }
+        .rarity-rare { border-color: #3b82f6; } .rarity-rare .blook-avatar { background: #2563eb; } .rarity-rare .blook-rarity { background: #2563eb; color: #dbeafe; }
+        .rarity-epic { border-color: #a855f7; } .rarity-epic .blook-avatar { background: #9333ea; } .rarity-epic .blook-rarity { background: #9333ea; color: #f3e8ff; }
+        .rarity-legendary { border-color: #eab308; } .rarity-legendary .blook-avatar { background: #ca8a04; } .rarity-legendary .blook-rarity { background: #ca8a04; color: #fef9c3; }
+        .rarity-chroma { border-color: #06b6d4; } .rarity-chroma .blook-avatar { background: #0891b2; } .rarity-chroma .blook-rarity { background: #0891b2; color: #cffafe; }
+        .rarity-supreme { border-color: #ec4899; } .rarity-supreme .blook-avatar { background: #db2777; } .rarity-supreme .blook-rarity { background: #db2777; color: #fce7f3; }
+        .rarity-mystical { border-color: #f97316; } .rarity-mystical .blook-avatar { background: #ea580c; } .rarity-mystical .blook-rarity { background: #ea580c; color: #ffedd5; }
+
+        /* Bottom Navigation Bar */
+        nav.bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--nav-bg); border-top: 2px solid var(--card-border); display: flex; justify-content: space-around; padding: 6px 4px; z-index: 1000; box-shadow: 0 -4px 15px rgba(0,0,0,0.7); }
+        .nav-btn { background: transparent; border: none; color: var(--text-muted); display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 0.7rem; font-weight: 800; cursor: pointer; padding: 4px 10px; border-radius: 10px; transition: color 0.2s; }
+        .nav-btn span.icon { font-size: 1.2rem; }
+        .nav-btn.active { color: var(--accent-gold); background: rgba(230,46,67,0.15); }
+
+        /* Admin Modal */
+        #adminModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 2000; }
+        .modal-content { background: var(--card-bg); border: 2px solid var(--accent-gold); padding: 30px 20px; border-radius: 16px; width: 90%; max-width: 350px; text-align: center; }
+        .modal-content h2 { margin-bottom: 10px; color: var(--accent-gold); font-size: 1.4rem; font-weight: 900; }
+        .modal-content input { width: 100%; padding: 12px; margin-bottom: 15px; background: var(--bg-base); border: 2px solid var(--card-border); color: white; border-radius: 10px; font-size: 1rem; text-align: center; outline: none; }
+        .modal-buttons { display: flex; gap: 10px; justify-content: center; }
+        .btn-secondary { background: #4a1218; box-shadow: none; }
     </style>
 </head>
 <body>
@@ -90,81 +93,141 @@
         </div>
     </header>
 
-    <div class="app-layout">
-        <!-- Blooket-style Sidebar Navigation -->
-        <sidebar>
-            <button class="nav-btn active" onclick="switchTab('dashboard', this)">🏠 Dashboard</button>
-            <button class="nav-btn" onclick="switchTab('spin', this)">🎁 Spin / Boxes</button>
-            <button class="nav-btn" onclick="switchTab('locker', this)">🎒 Locker</button>
-            <button class="nav-btn" onclick="switchTab('bazaar', this)">⚖️ Bazaar</button>
-        </sidebar>
-
-        <!-- Main Content Area -->
-        <div class="content-area">
-            
-            <!-- Dashboard Tab -->
-            <div id="dashboard" class="tab-pane active">
-                <div class="hero-box">
-                    <h1>Global Command Center</h1>
-                    <p>Claim your daily stipends, manage your assets, and deploy to battle.</p>
-                    <button class="btn" onclick="claimDaily()">Claim Daily +50 Tokens</button>
-                </div>
+    <!-- Main Content Area -->
+    <div class="content-area">
+        
+        <!-- Dashboard Tab -->
+        <div id="dashboard" class="tab-pane active">
+            <div class="hero-box">
+                <h1>Global Command Center</h1>
+                <p>Claim daily tokens, open official Blooket & Blacket packs, and build your collection.</p>
+                <button class="btn" onclick="claimDaily()">Claim Daily +50 Tokens</button>
             </div>
-
-            <!-- Spin / Box Tab -->
-            <div id="spin" class="tab-pane">
-                <div style="text-align: center;">
-                    <h2 style="font-size: 2rem; color: var(--accent-gold); margin-bottom: 8px; font-weight: 900;">Box Opening Arena</h2>
-                    <p style="color: var(--text-muted); font-size: 1.05rem;">Spend tokens to spin and unlock rare units!</p>
-                </div>
-                
-                <div class="spin-grid">
-                    <div class="box-card">
-                        <div class="box-icon">📦</div>
-                        <h3>Standard Box</h3>
-                        <p>Cost: 50 Tokens</p>
-                        <button class="btn" onclick="openBox(50, 'Standard')">Open Box</button>
-                    </div>
-                    <div class="box-card">
-                        <div class="box-icon">🔥</div>
-                        <h3>Red Alert Elite Box</h3>
-                        <p>Cost: 150 Tokens</p>
-                        <button class="btn" onclick="openBox(150, 'Elite')">Open Box</button>
-                    </div>
-                </div>
-
-                <div id="rewardResult">
-                    <h3 id="rewardTitle" style="color: var(--accent-gold); font-size: 1.5rem; margin-bottom: 8px; font-weight: 900;"></h3>
-                    <p id="rewardDesc" style="color: var(--text-main); font-size: 1.15rem; font-weight: 700;"></p>
-                </div>
-            </div>
-
-            <!-- Locker Tab -->
-            <div id="locker" class="tab-pane">
-                <h2 style="color: var(--accent-gold); font-size: 1.8rem; font-weight: 900;">Your Locker</h2>
-                <p style="color: var(--text-muted);">Unlocked items and units will appear here.</p>
-                <div style="background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px; padding: 40px; text-align: center; color: var(--text-muted); font-weight: 600;">
-                    Locker is currently empty. Go open some boxes!
-                </div>
-            </div>
-
-            <!-- Bazaar Tab -->
-            <div id="bazaar" class="tab-pane">
-                <h2 style="color: var(--accent-gold); font-size: 1.8rem; font-weight: 900;">Global Trading Bazaar</h2>
-                <p style="color: var(--text-muted);">Trade items safely with other players around the globe.</p>
-                <div style="background: var(--card-bg); border: 2px solid var(--border-color); border-radius: 16px; padding: 40px; text-align: center; color: var(--text-muted); font-weight: 600;">
-                    Trading marketplace coming online soon...
-                </div>
-            </div>
-
         </div>
+
+        <!-- Packs Tab -->
+        <div id="spin" class="tab-pane">
+            <div style="text-align: center;">
+                <h2 style="font-size: 1.5rem; color: var(--accent-gold); margin-bottom: 4px; font-weight: 900;">All Packs Arena</h2>
+                <p style="color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">Choose an official pack to open:</p>
+            </div>
+            
+            <div class="packs-grid">
+                <div class="box-card">
+                    <div class="box-icon">📦</div>
+                    <h3>Standard Pack</h3>
+                    <p>20 Tokens</p>
+                    <button class="btn" onclick="openPack('standard')">Open</button>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon">🏰</div>
+                    <h3>Medieval Pack</h3>
+                    <p>20 Tokens</p>
+                    <button class="btn" onclick="openPack('medieval')">Open</button>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon">🌿</div>
+                    <h3>Botanical Pack</h3>
+                    <p>25 Tokens</p>
+                    <button class="btn" onclick="openPack('botanical')">Open</button>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon">🦕</div>
+                    <h3>Safari Pack</h3>
+                    <p>25 Tokens</p>
+                    <button class="btn" onclick="openPack('safari')">Open</button>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon">🌊</div>
+                    <h3>Aqua Pack</h3>
+                    <p>25 Tokens</p>
+                    <button class="btn" onclick="openPack('aqua')">Open</button>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon">🚀</div>
+                    <h3>Space Pack</h3>
+                    <p>25 Tokens</p>
+                    <button class="btn" onclick="openPack('space')">Open</button>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon">🎩</div>
+                    <h3>Wonderland Pack</h3>
+                    <p>30 Tokens</p>
+                    <button class="btn" onclick="openPack('wonderland')">Open</button>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon">👻</div>
+                    <h3>Spooky Pack</h3>
+                    <p>35 Tokens</p>
+                    <button class="btn" onclick="openPack('spooky')">Open</button>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon">🤖</div>
+                    <h3>Bot Pack</h3>
+                    <p>40 Tokens</p>
+                    <button class="btn" onclick="openPack('bot')">Open</button>
+                </div>
+                <div class="box-card">
+                    <div class="box-icon">💀</div>
+                    <h3>Kalaca Pack</h3>
+                    <p>50 Tokens</p>
+                    <button class="btn" onclick="openPack('kalaca')">Open</button>
+                </div>
+                <div class="box-card" style="grid-column: span 2;">
+                    <div class="box-icon">🦇</div>
+                    <h3>Horror Pack</h3>
+                    <p>75 Tokens</p>
+                    <button class="btn" onclick="openPack('horror')">Open</button>
+                </div>
+            </div>
+
+            <div id="rewardResult">
+                <h3 id="rewardTitle" style="color: var(--accent-gold); font-size: 1.2rem; margin-bottom: 6px; font-weight: 900;"></h3>
+                <div id="rewardBlookContainer" style="display: flex; justify-content: center; margin-top: 10px;"></div>
+            </div>
+        </div>
+
+        <!-- Locker Tab -->
+        <div id="locker" class="tab-pane">
+            <h2 style="color: var(--accent-gold); font-size: 1.5rem; font-weight: 900;">Your Locker</h2>
+            <p style="color: var(--text-muted); font-weight: 600; font-size: 0.85rem;">Your collected Blooks:</p>
+            <div id="lockerGrid" class="blooks-grid">
+                <!-- Populated via JavaScript -->
+            </div>
+        </div>
+
+        <!-- Bazaar Tab -->
+        <div id="bazaar" class="tab-pane">
+            <h2 style="color: var(--accent-gold); font-size: 1.5rem; font-weight: 900;">Global Trading Bazaar</h2>
+            <p style="color: var(--text-muted); font-weight: 600; font-size: 0.85rem;">Trade Blooks with players worldwide.</p>
+            <div style="background: var(--card-bg); border: 2px solid var(--card-border); border-radius: 16px; padding: 30px 15px; text-align: center; color: var(--text-muted); font-weight: 700; font-size: 0.95rem;">
+                Trading marketplace coming online soon...
+            </div>
+        </div>
+
     </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" onclick="switchTab('dashboard', this)">
+            <span class="icon">🏠</span> Dashboard
+        </button>
+        <button class="nav-btn" onclick="switchTab('spin', this)">
+            <span class="icon">🎁</span> Packs
+        </button>
+        <button class="nav-btn" onclick="switchTab('locker', this); renderLocker();">
+            <span class="icon">🎒</span> Locker
+        </button>
+        <button class="nav-btn" onclick="switchTab('bazaar', this)">
+            <span class="icon">⚖️</span> Bazaar
+        </button>
+    </nav>
 
     <!-- Admin Modal -->
     <div id="adminModal">
         <div class="modal-content">
             <h2>Admin Authentication</h2>
-            <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">Enter security password to access Ogangel panel.</p>
+            <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:15px; font-weight: 600;">Enter password for Ogangel access.</p>
             <input type="password" id="adminPasswordInput" placeholder="Password...">
             <div class="modal-buttons">
                 <button class="btn btn-secondary" onclick="closeAdminPanel()">Cancel</button>
@@ -175,64 +238,114 @@
 
     <script>
         let tokens = 250;
+        let locker = [
+            { name: "Dog", icon: "🐶", rarity: "common" },
+            { name: "Cat", icon: "🐱", rarity: "common" }
+        ];
 
-        function switchTab(tabId, btnElement) {
-            document.querySelectorAll('.tab-pane').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btnElement.classList.add('active');
-        }
-
-        function claimDaily() {
-            tokens += 50;
-            updateTokens();
-            alert('Success! +50 Tokens added.');
-        }
-
-        function updateTokens() {
-            document.getElementById('tokenCount').innerText = tokens;
-        }
-
-        function openBox(cost, type) {
-            if (tokens < cost) {
-                alert('Not enough tokens!');
-                return;
-            }
-            tokens -= cost;
-            updateTokens();
-
-            const rewards = type === 'Standard' ? 
-                ['Basic Infantry', 'Scout Drone', 'Supply Crate'] : 
-                ['Elite Commander', 'Red Alert Strike Cruiser', 'Legendary Mecha'];
-            
-            const won = rewards[Math.floor(Math.random() * rewards.length)];
-            
-            const resultBox = document.getElementById('rewardResult');
-            document.getElementById('rewardTitle').innerText = `🎉 You Unlocked a ${type} Reward!`;
-            document.getElementById('rewardDesc').innerText = `Item: ${won}`;
-            resultBox.style.display = 'block';
-        }
-
-        function openAdminPanel() {
-            document.getElementById('adminModal').style.display = 'flex';
-        }
-
-        function closeAdminPanel() {
-            document.getElementById('adminModal').style.display = 'none';
-            document.getElementById('adminPasswordInput').value = '';
-        }
-
-        function verifyAdmin() {
-            const pass = document.getElementById('adminPasswordInput').value;
-            if (pass === 'Ogangel') {
-                alert('Access Granted: Welcome to the Ogangel Admin Dashboard!');
-                tokens += 1000;
-                updateTokens();
-                closeAdminPanel();
-            } else {
-                alert('Access Denied: Incorrect Password.');
-            }
-        }
-    </script>
-</body>
-</html>
+        const packData = {
+            standard: {
+                cost: 20,
+                blooks: [
+                    { name: "Dog", icon: "🐶", rarity: "common" },
+                    { name: "Cat", icon: "🐱", rarity: "common" },
+                    { name: "Chicken", icon: "🐔", rarity: "common" },
+                    { name: "Cow", icon: "🐮", rarity: "common" },
+                    { name: "Pig", icon: "🐷", rarity: "common" },
+                    { name: "Sheep", icon: "🐑", rarity: "common" },
+                    { name: "Owl", icon: "🦉", rarity: "uncommon" },
+                    { name: "Fox", icon: "🦊", rarity: "uncommon" },
+                    { name: "Panda", icon: "🐼", rarity: "rare" },
+                    { name: "Unicorn", icon: "🦄", rarity: "legendary" }
+                ]
+            },
+            medieval: {
+                cost: 20,
+                blooks: [
+                    { name: "Peasant", icon: "🧑", rarity: "common" },
+                    { name: "Guard", icon: "💂", rarity: "common" },
+                    { name: "Archer", icon: "🏹", rarity: "uncommon" },
+                    { name: "Knight", icon: "🛡️", rarity: "rare" },
+                    { name: "Wizard", icon: "🧙", rarity: "epic" },
+                    { name: "King", icon: "👑", rarity: "legendary" }
+                ]
+            },
+            botanical: {
+                cost: 25,
+                blooks: [
+                    { name: "Oak Tree", icon: "🌳", rarity: "common" },
+                    { name: "Flower", icon: "🌸", rarity: "common" },
+                    { name: "Cactus", icon: "🌵", rarity: "uncommon" },
+                    { name: "Venus Flytrap", icon: "🪴", rarity: "rare" },
+                    { name: "Sakura", icon: "🌸", rarity: "epic" }
+                ]
+            },
+            safari: {
+                cost: 25,
+                blooks: [
+                    { name: "Zebra", icon: "🦓", rarity: "common" },
+                    { name: "Giraffe", icon: "🦒", rarity: "uncommon" },
+                    { name: "Elephant", icon: "🐘", rarity: "rare" },
+                    { name: "Lion", icon: "🦁", rarity: "epic" },
+                    { name: "Cheetah", icon: "🐆", rarity: "legendary" }
+                ]
+            },
+            aqua: {
+                cost: 25,
+                blooks: [
+                    { name: "Clownfish", icon: "🐠", rarity: "common" },
+                    { name: "Turtle", icon: "🐢", rarity: "uncommon" },
+                    { name: "Shark", icon: "🦈", rarity: "rare" },
+                    { name: "Whale", icon: "🐋", rarity: "epic" },
+                    { name: "Megalodon", icon: "🦈", rarity: "legendary" }
+                ]
+            },
+            space: {
+                cost: 25,
+                blooks: [
+                    { name: "Astronaut", icon: "👨‍🚀", rarity: "common" },
+                    { name: "Alien", icon: "👽", rarity: "uncommon" },
+                    { name: "Planet", icon: "🪐", rarity: "rare" },
+                    { name: "UFO", icon: "🛸", rarity: "epic" },
+                    { name: "Black Hole", icon: "🕳️", rarity: "legendary" }
+                ]
+            },
+            wonderland: {
+                cost: 30,
+                blooks: [
+                    { name: "Alice", icon: "👧", rarity: "common" },
+                    { name: "Mad Hatter", icon: "🎩", rarity: "uncommon" },
+                    { name: "Cheshire Cat", icon: "😺", rarity: "rare" },
+                    { name: "Queen of Hearts", icon: "👸", rarity: "legendary" }
+                ]
+            },
+            spooky: {
+                cost: 35,
+                blooks: [
+                    { name: "Ghost", icon: "👻", rarity: "common" },
+                    { name: "Zombie", icon: "🧟", rarity: "uncommon" },
+                    { name: "Vampire", icon: "🧛", rarity: "rare" },
+                    { name: "Witch", icon: "🧙‍♀️", rarity: "epic" },
+                    { name: "Pumpkin King", icon: "🎃", rarity: "legendary" }
+                ]
+            },
+            bot: {
+                cost: 40,
+                blooks: [
+                    { name: "Tiny Bot", icon: "🤖", rarity: "common" },
+                    { name: "Safe Bot", icon: "🦾", rarity: "uncommon" },
+                    { name: "Mega Bot", icon: "🤖", rarity: "rare" },
+                    { name: "Astro Bot", icon: "🚀", rarity: "legendary" }
+                ]
+            },
+            kalaca: {
+                cost: 50,
+                blooks: [
+                    { name: "Calaca", icon: "💀", rarity: "common" },
+                    { name: "Golden Calaca", icon: "☠️", rarity: "legendary" }
+                ]
+            },
+            horror: {
+                cost: 75,
+                blooks:
+        
